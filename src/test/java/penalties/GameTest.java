@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
@@ -16,16 +17,12 @@ import static org.mockito.Mockito.*;
 
 public class GameTest {
 
-    @Mock
-    Game penaltyService;
-
-
     private Game penaltieSerie;
 
 
     @Before
     public void initTest(){
-        penaltieSerie = new Game();
+        penaltieSerie = spy(new Game());
         MockitoAnnotations.initMocks(this);
     }
 
@@ -99,24 +96,36 @@ public class GameTest {
 
     @Test
     public void makeShotByPersonalTest(){
-        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1);
+        //Game spiedStatService = Mockito.spy(new Game());
+        //when(spiedStatService.getPlayerStat("Messi")).thenReturn(new ArrayList<>(Arrays.asList(0, 1, 1, 1, 0)));
+        when(penaltieSerie.getPlayerStat("Messi")).thenReturn(new ArrayList<>(Arrays.asList(0, 1, 1, 1, 0)));
+        List<Integer> testedStat = penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1);
+        List<Integer> expectedStat = new ArrayList<>(Arrays.asList(0, 1, 1, 1, 0));
         Assert.assertEquals(penaltieSerie.getLeftCommandAttempts(), 1);
         Assert.assertEquals(penaltieSerie.getLeftCommandScore(), 1);
+        Assert.assertEquals(testedStat, expectedStat);
     }
-
 
     @Test
-    public void servicePlayerTest(){
-//        when(game.lastBy("Messi")).thenReturn(x);
-//        Assert.assertEquals(game.kick("Messi"...), x);
+    public void overallCostOfMissedPlayersTest(){
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        int testedCost = penaltieSerie.costOfMissedPlayers();
+        int expectedCost = 0;
+        Assert.assertEquals(testedCost, expectedCost);
 
-//        List<Integer> playerStat = new ArrayList<>(Arrays.asList(0, 1, 1, 1, 0, 1, 1, 0, 1, 0));
-
-        List<Integer> playerStat = new ArrayList<>(Arrays.asList(0, 1, 1, 1, 0));
-        when(penaltieSerie.lastBy("Messi")).thenReturn(playerStat);
-
-        Assert.assertEquals(penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1), playerStat);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+        testedCost = penaltieSerie.costOfMissedPlayers();
+        expectedCost = 70000000;
     }
+
 
 }
 

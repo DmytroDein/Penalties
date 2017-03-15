@@ -1,6 +1,8 @@
 package penalties;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Game {
@@ -11,7 +13,6 @@ public class Game {
     int rightCommandScore;
     int rightCommandAttempts;
     boolean finished;
-
 
     public void Game() {
         leftCommandScore = 0;
@@ -86,16 +87,27 @@ public class Game {
         return 0;
     }
 
+    // Spied service call
+    protected List<Integer> getPlayerStat(String playerName){
+        return null;
+    }
+
 
     public List<Integer> makeShotByPersonal(String player, String commandMark, int attemptScore) {
-
         makeShot(commandMark, attemptScore);
-        return null;
+        return getPlayerStat("Messi");
 
     }
 
-    public List<Integer> lastBy(String player) {
+    /*public List<Integer> lastBy(String player) {
         return null;
+    }*/
+
+    public int costOfMissedPlayers() {
+        if (leftCommandAttepmts > 7 && rightCommandAttempts > 7){
+
+        }
+        return 0;
     }
 }
 
