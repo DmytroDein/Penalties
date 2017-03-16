@@ -104,10 +104,14 @@ public class Game {
     }*/
 
     public int costOfMissedPlayers() {
-        if (leftCommandAttepmts > 7 && rightCommandAttempts > 7){
-
-        }
+        /*if (leftCommandAttepmts >= 7 && rightCommandAttempts >= 7){
+            return 70000000;
+        }*/
         return 0;
+    }
+
+    public String getScore() {
+        return String.format("LeftCommand (%d) : RightCommand (%d)", leftCommandScore, rightCommandScore);
     }
 }
 
