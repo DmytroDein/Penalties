@@ -108,6 +108,10 @@ public class GameTest {
 
     @Test
     public void scoreTest(){
+
+        when(penaltieSerie.costOfMissedPlayers("LeftCommand")).thenReturn(70000000);
+        when(penaltieSerie.costOfMissedPlayers("RightCommand")).thenReturn(20000000);
+
         penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
         penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1);
         penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1);
@@ -131,7 +135,9 @@ public class GameTest {
         penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 1);
 
         expectedResult = penaltieSerie.getScore();
-        checkingResult = "LeftCommand (3) : RightCommand (5)";
+        checkingResult = "LeftCommand (3)[70000000] : RightCommand (5) [20000000]";
+
+        Assert.assertEquals(expectedResult, checkingResult);
     }
 
 
@@ -146,7 +152,8 @@ public class GameTest {
         penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 0);
         penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 0);
 
-        int testedCost = penaltieSerie.costOfMissedPlayers();
+
+        int testedCost = penaltieSerie.costOfMissedPlayers("LeftCommand");
         int expectedCost = 0;
         Assert.assertEquals(testedCost, expectedCost);
 
@@ -166,7 +173,7 @@ public class GameTest {
         penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 0);
         penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 0);
 
-        testedCost = penaltieSerie.costOfMissedPlayers();
+        testedCost = penaltieSerie.costOfMissedPlayers("LeftCommand");
         expectedCost = 70000000;
     }
 

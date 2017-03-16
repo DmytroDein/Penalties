@@ -103,14 +103,18 @@ public class Game {
         return null;
     }*/
 
-    public int costOfMissedPlayers() {
-        /*if (leftCommandAttepmts >= 7 && rightCommandAttempts >= 7){
-            return 70000000;
-        }*/
+    public int costOfMissedPlayers(String commandName) {
         return 0;
     }
 
     public String getScore() {
+        if (leftCommandAttepmts >= 7 && rightCommandAttempts >= 7){
+            int leftCommandLoosersCost = costOfMissedPlayers("LeftCommand");
+            int rightCommandLoosersCost = costOfMissedPlayers("RightCommand");
+
+            return String.format("LeftCommand (%d) [%d] : RightCommand (%d) [%d]",
+                    leftCommandScore, leftCommandLoosersCost ,rightCommandScore, rightCommandLoosersCost);
+        }
         return String.format("LeftCommand (%d) : RightCommand (%d)", leftCommandScore, rightCommandScore);
     }
 }
