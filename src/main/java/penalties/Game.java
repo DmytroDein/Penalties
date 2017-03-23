@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Game {
 
-    public final int MAX_SERIES = 5;
+    public final int MAX_SERIES = 12;
     int leftCommandScore;
     int leftCommandAttepmts;
     int rightCommandScore;
