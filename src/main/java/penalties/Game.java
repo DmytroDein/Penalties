@@ -1,8 +1,7 @@
 package penalties;
 
+import penalties.exceptions.ShotException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Game {
@@ -52,6 +51,8 @@ public class Game {
             if (checkEarlyTerminationConditions() || (leftCommandAttepmts == MAX_SERIES && rightCommandAttempts == MAX_SERIES)) {
                 finished = true;
             }
+        } else {
+            throw new ShotException("The Game already finished!");
         }
     }
 
@@ -83,25 +84,16 @@ public class Game {
         return false;
     }
 
-    protected int getPlayerCost(){
-        return 0;
-    }
-
     // Spied service call
     protected List<Integer> getPlayerStat(String playerName){
         return null;
     }
-
 
     public List<Integer> makeShotByPersonal(String player, String commandMark, int attemptScore) {
         makeShot(commandMark, attemptScore);
         return getPlayerStat("Messi");
 
     }
-
-    /*public List<Integer> lastBy(String player) {
-        return null;
-    }*/
 
     public int costOfMissedPlayers(String commandName) {
         return 0;

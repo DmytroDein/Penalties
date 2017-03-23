@@ -4,13 +4,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import penalties.exceptions.ShotException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-
 
 public class GameTest {
 
@@ -37,20 +37,22 @@ public class GameTest {
     }
 
     @Test
-    public void makeShotTest(){
-        penaltieSerie.makeShot("LeftCommand", 1);
-        penaltieSerie.makeShot("RightCommand", 0);
-        penaltieSerie.makeShot("RightCommand", 1);
-        penaltieSerie.makeShot("RightCommand", 1);
+    public void commandsScoreTest(){
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1);
+        penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 0);
+        penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 1);
+        penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 1);
+
         Assert.assertEquals(penaltieSerie.getLeftCommandScore(), 1);
         Assert.assertEquals(penaltieSerie.getRightCommandScore(), 2);
     }
 
     @Test
     public void attemptsCountTest(){
-        penaltieSerie.makeShot("LeftCommand", 1);
-        penaltieSerie.makeShot("RightCommand", 0);
-        penaltieSerie.makeShot("RightCommand", 1);
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1);
+        penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 0);
+        penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 1);
+
         Assert.assertEquals(penaltieSerie.getLeftCommandAttempts(), 1);
         Assert.assertEquals(penaltieSerie.getRightCommandAttempts(), 2);
     }
@@ -58,8 +60,8 @@ public class GameTest {
     @Test
     public void fullGameScoreTest(){
         for(int i = 1; i <= penaltieSerie.MAX_SERIES; i++){
-            penaltieSerie.makeShot("LeftCommand", 1);
-            penaltieSerie.makeShot("RightCommand", 1);
+            penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1);
+            penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 1);
         }
         Assert.assertEquals(penaltieSerie.isFinished(), true);
         Assert.assertEquals(penaltieSerie.getLeftCommandScore(), penaltieSerie.MAX_SERIES);
@@ -67,28 +69,16 @@ public class GameTest {
     }
 
     @Test
-    public void earlyTerminationTest() {
-        final int fastEnd = penaltieSerie.MAX_SERIES / 2 + 1;
+    public void earlyTerminationConditionTest() {
+        final int fastEnd = penaltieSerie.MAX_SERIES / 2;
         for (int i = 1; i <= fastEnd; i++) {
-            penaltieSerie.makeShot("LeftCommand", 1);
-            penaltieSerie.makeShot("RightCommand", 0);
+            penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1);
+            penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 0);
         }
+        penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 1);
         Assert.assertEquals(penaltieSerie.checkEarlyTerminationConditions(), true);
-        Assert.assertEquals(penaltieSerie.getLeftCommandAttempts(), fastEnd);
-        Assert.assertEquals(penaltieSerie.getRightCommandAttempts(), fastEnd - 1);
-    }
-
-    @Test
-    public void checkEarlyTerminationMethod(){
-        final int fastEnd = penaltieSerie.MAX_SERIES / 2 + 1;
-        for (int i = 1; i <= fastEnd; i++) {
-            penaltieSerie.makeShot("LeftCommand", 1);
-            penaltieSerie.makeShot("RightCommand", 0);
-        }
-        penaltieSerie.makeShot("LeftCommand", 1);
-        System.out.println(penaltieSerie.getLeftCommandAttempts());
-        System.out.println(penaltieSerie.getRightCommandAttempts());
-        Assert.assertTrue(penaltieSerie.checkEarlyTerminationConditions());
+        Assert.assertEquals(penaltieSerie.getLeftCommandAttempts(), fastEnd + 1);
+        Assert.assertEquals(penaltieSerie.getRightCommandAttempts(), fastEnd);
     }
 
     @Test
@@ -129,6 +119,16 @@ public class GameTest {
         expectedResult = penaltieSerie.getScore();
         checkingResult = "LeftCommand (3) [70000000] : RightCommand (5) [20000000]";
         Assert.assertEquals(expectedResult, checkingResult);
+    }
+
+    @Test(expected= ShotException.class)
+    public void exceptionOnKickAfterGameFinished (){
+        final int fastEnd = penaltieSerie.MAX_SERIES / 2 + 1;
+        for (int i = 1; i <= fastEnd; i++) {
+            penaltieSerie.makeShotByPersonal("Messi", "LeftCommand", 0);
+            penaltieSerie.makeShotByPersonal("Ronaldu", "RightCommand", 1);
+        }
+        penaltieSerie.makeShot("LeftCommand", 0);
     }
 }
 
